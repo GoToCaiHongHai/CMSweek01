@@ -52,6 +52,7 @@ public class HeroController {
 	@RequestMapping("addHero")
 	public String addHero(Hero hero){
 		int i=service.insertHero(hero);
+		System.out.println(i);
 		return "forward:show";
 	}
 	
