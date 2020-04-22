@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gd.mapper.HeroMapper">
+	
+	<resultMap type="com.gd.bean.Hero" id="hc">
+		<id column="hid" property="hid"/>
+		<result column="hname" property="hname"/>
+		<result column="price" property="price"/>
+		<result column="have" property="have"/>
+		<association property="camp" javaType="com.gd.bean.Camp">
+			<id column="cid" property="cid"/>
+			<result column="cname" property="cname"/>
+		</association>
+	</resultMap>
+	<select id="selectHeroByItem" resultMap="hc">
+		SELECT * FROM hero h,camp c 
+		<where>
+			h.cid=c.cid
+			<if test="cid!=null and cid!=''">
+				and h.cid=#{cid} 
+			</if>
+			<if test="minPrice!=null and minPrice!=''">
+				and h.price &gt; #{minPrice}
+			</if>
+			<if test="maxPrice!=null and maxPrice!=''">
+				and h.price &lt; #{maxPrice}
+			</if>
+			<if test="have!=null and have!=''">
+				and h.have=#{have}
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectCamp" resultType="com.gd.bean.Camp">
+		SELECT * FROM camp
+	</select>
+	
+	<insert id="insertHero" parameterType="com.gd.bean.Hero">
+		insert into hero values(0,#{hname},#{price},#{have},#{camp.cid});
+	</insert>
+	
+	<update id="updateHero" parameterType="int">
+		UPDATE hero SET have=1  
+		<where>
+			hid=#{hid}
+		</where>
+	</update>
+	
+	<select id="selectOneHero" resultMap="hc">
+		select * from hero where hid=#{hid}
+	</select>
+	
+	<select id="selectCampById" resultType="com.gd.bean.Camp">
+		SELECT * FROM camp 
+		<where>
+			cid=#{cid}
+		</where>
+	</select>
+</mapper>
+    
